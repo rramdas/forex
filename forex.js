@@ -1,42 +1,60 @@
 var FxRates = new Meteor.Collection('fxrates');
+var Trades = new Meteor.Collection('trades');
 
 if (Meteor.isClient) {
 
   Deps.autorun(function () {
     Meteor.subscribe('fxrates');
+    Meteor.subscribe('trades');
   });
 
   Template.layout.exchange_rates = function () {
     return FxRates.find({}).fetch();
   }
 
+  Template.layout.events({
+
+    'click #buyOrder' : function (event, template) {
+    }
+
+  });
+
+  Template.orderHistory.open_trades = function () {
+    return Trades.find({}).fetch();
+  }
+
+  Template.orderHistory.new_trade = function () {
+    //setup a new trade, get the rate from the user's selection
+  }
+
+  Template.buyOrderModal.events({
+    'click #buy-button': function (event, template) {
+      //save trade
+    }
+  });
 }
 
 if (Meteor.isServer) {
 
-  var fx = Npm.require('money');
-
-  fx.base = 'USD';
 
   Meteor.startup(function () {
-    if (FxRates.find().count() === 0 ) {
-      var datum = '2013-04-12.json';
-      var url = 'http://openexchangerates.org/api/historical/' + datum + '?app_id=7276637dabc244cc829cfed87bd6c989';
-      var result = Meteor.http.get(url, {timeout : 300000});
-      if (result.statusCode == 200) {
-        console.log('Received data from Open Exchange.');
-        fx.data = result.data;
-        fx.rates = result.data.rates;
-        FxRates.insert({ fxdate : new Date (2013, 04, 12), timestamp : result.data.timestamp, rates : fx.rates });
-        console.log(fx.rates);
-      }
-    }
 
+    if (Trades.find().count() === 0 ) {
+      Trades.insert( { buysell : 'BUY', pair : 'USD/EUR', rate : '1.308', risklevel : 'X100'} );
+      Trades.insert( { buysell : 'SELL', pair : 'USD/NZD', rate : '0.938', risklevel : 'X50'} );
+      Trades.insert( { buysell : 'BUY', pair : 'EUR/CAD', rate : '1.398', risklevel : 'X400'} );
+      Trades.insert( { buysell : 'SELL', pair : 'USD/EUR', rate : '1.308', risklevel : 'X100'} );
+      Trades.insert( { buysell : 'BUY', pair : 'USD/EUR', rate : '1.308', risklevel : 'X100'} );
+    }
   });
 
   Meteor.publish('fxrates', function () {
     return FxRates.find({});
   });
+
+  Meteor.publish ('trades', function () {
+    return Trades.find();
+  })
 
 
 }

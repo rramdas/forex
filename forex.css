@@ -9,3 +9,11 @@ body {
 .container {
 
 }
+
+#buy-order .modal-body {
+  max-height: 600px;
+}
+
+.my-button {
+	width: 150px;
+}

@@ -3,63 +3,145 @@
 </head>
 
 <body>
+  <div class="container">
   {{> layout}}
+</div>
 </body>
 
 <template name="layout">
-
-<div class="container">
-
-  <div class="row" > <!-- buy/sell viewport -->
-
-<table class="table table-striped table-bordered">
-<tr>
-  <th> Currencies {{exchange_rates.count}} </th>
-</tr>
-{{#each exchange_rates }}
-<tr>
-  <td>
+  <div class="row" > <!-- begin buy/sell viewport -->
     <table class="table table-striped table-bordered">
       <tr>
-        <td>
-          USD/EUR
-       </td>
-       <td>
-        <div class="control-group">
-          <div class="controls">
-            <a class="btn btn-small" href="#">Sell</i> {{rates.EUR}}</a>
-            <a class="btn btn-small" href="#">Buy</i> 1.323</a>
-          </div>
-        <div>
-       </td>
+        <th> Currencies </th>
+        <th> Buy </th>
+        <th> Sell </th>
+        <th> Trend </th>
+      </tr>
+      <tr>
+        <td>EUR/USD </td>
+        <td><a href="#buyOrder" class="btn btn-success" data-toggle="modal">1.345</a></td>
+        <td><a href="#sell-order" class="btn btn-danger" data-toggle="modal">1.345</a></td>
+        <td><i class="icon-plus"></i></td>
+      </tr>
+      <tr>
+        <td>EUR/USD </td>
+        <td><a href="#buy-order" class="btn btn-success" data-toggle="modal">1.345</a></td>
+        <td><a href="#sell-order" class="btn btn-danger" data-toggle="modal">1.345</a></td>
+        <td><i class="icon-plus"></i></td>
+      </tr>
+      <tr>
+        <td>EUR/USD </td>
+        <td><a href="#buy-order" class="btn btn-success" data-toggle="modal">1.345</a></td>
+        <td><a href="#sell-order" class="btn btn-danger" data-toggle="modal">1.345</a></td>
+        <td><i class="icon-plus"></i></td>
       </tr>
     </table>
-  </td>
-  {{/each}}
-</tr>
-</table>
-
   </div> <!-- end buy/sell viewport -->
 
-  <div class="row"> <!-- order/history viewport -->
+    {{> buyOrderModal }}
+    {{> orderHistory }}
+    {{> fund-management }}
 
-   <ul class="nav nav-tabs">
-     <li class="active" ><a href="open#">Open Orders</a></li>
-     <li class="" ><a href="open#">History</a></li>
-     <li class="" ><a href="open#">Messages</a></li>
-   </ul>
+</template>
 
-   <table class="table table-striped table-bordered">
-     <tr><td>eur/usd</td><td>100</td><td>@1.233</td></tr>
-   </table>
+<template name="buyOrderModal">
 
- </div> <!-- end order/history viewport -->
+<div id="buyOrder" class="modal hide fade" 
+     tabindex="-1" role="dialog" aria-labelledb="buy order"
+     aria-hidden="true" height="400"> <!-- begin modal buy-order -->
 
- <div class="row"> <!-- balance viewport -->
-   <button class="btn btn-large btn-primary" type="button">$989.99</button> 
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3> BUY EUR/USD </h3>
+  </div>
+
+  <div class="modal-body">
+    <table class="table table-striped table-bordered">
+      <tr>
+        <td> Current Rate </td>
+        <td> 1.3075</td>
+      </tr>
+      <tr>
+        <td> Risk Level</td>
+        <td>
+          <div class="my-button btn-group ">
+            <a class="btn" href="#"><i class="icon-minus"></i></a>
+            <a class="btn" href="#"><b>X100</b></a>
+            <a class="btn" href="#"><i class="icon-plus"></i></a>
+          </div>
+      </td>
+      </tr>
+      <tr>
+        <td>Amount</td>
+        <td>
+          <div class="my-button btn-group">
+            <a class="btn" href="#"><i class="icon-minus"></i></a>
+            <a class="btn" href="#"><b>$40</b></a>
+            <a class="btn" href="#"><i class="icon-plus"></i></a>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>Stop Loss</td>
+        <td>
+          <div class="my-button btn-group ">
+          <a class="btn" href="#"><i class="icon-minus"></i></a>
+          <a class="btn" href="#"><b>$1.317</b></a>
+          <a class="btn" href="#"><i class="icon-plus"></i></a>
+          </div> 
+        </td> 
+      </tr>
+      <tr>
+        <td>Take Profit</td>
+        <td>
+          <div class="my-button btn-group">
+          <a class="btn" href="#"><i class="icon-minus"></i></a> 
+          <a class="btn" href="#"><b>$1.292</b></a>
+          <a class="btn" href="#"><i class="icon-plus"></i></a> 
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <hr>
+    <button id="buy-button" class="btn btn-large btn-block btn-primary" type="button">Open Trade</button>
+    <hr>
+
+    <p>Buy 4000 units of EUR/USD</p>
+    <p>Spread: $1.2</p>
+    <p>Per pip: $0.4</p>
+  </div>
+
+  <div class="modal-footer"></div> 
+</div> <!-- end modal buy-order -->
+
+</template>
+
+<template name="orderHistory">  
+<div class="row"> <!-- begin order/history viewport -->
+
+  <ul class="nav nav-tabs">
+    <li class="active" ><a href="open#">Open Orders</a></li>
+    <li class="" ><a href="open#">History</a></li>
+    <li class="" ><a href="open#">Messages</a></li>
+  </ul>
+
+  <table class="table table-striped table-bordered">
+    {{# each open_trades }}
+    <tr>
+      <td>{{pair}}</td>
+      <td>{{rate}}</td>
+      <td>{{buysell}}</td>
+    </tr>
+    {{/each}}
+  </table>
+
+</div> <!-- end order/history viewport -->
+</template>
+
+<template name="fund-management">
+ <div class="row"> <!-- begin balance viewport -->
+   <button class="btn btn-large btn-primary" type="button">$19,989.99</button> 
    <button class="btn btn-large btn-primary" type="button">Add Funds</button> 
- </div>
-
-</div> <!-- end container -->
-
+ </div> <!-- end balance viewport -->
 </template>
